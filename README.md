@@ -14,7 +14,8 @@ Your job:
 - Create and utilize FAISS vector database in `search/integrations.py`
 - Implement a `CypherQuery` pydantic BaseModel class in `search/models.py`, with it's own `__str__` function that returns itself as a Cypher Query
 - Implement a prototype `text_to_cypher` function, which utilizes langchain LLMs, the `CypherQuery` and `with_structured_output` to create a query from natural language
-- Search the FAISS index using the natural language query AND the CypherQuery (for testing purposes - in a typical use case, the Cypher would be executed on a neo4j DB or similar)
+- Search the FAISS index using the natural language query AND the CypherQuery
+- Search the knowledgegraph using the mock function (0.0-1.0 range)
 - Return the top `k` results as `SearchResult` objects.
 - Keep the code clean, readable and maintainable.
 
@@ -61,6 +62,7 @@ You should only need to modify:
 
 - `backend/features/search/search_router.py`
 - `backend/features/search/integrations.py`
+- `backend/features/search/models.py`
 - `frontend/src/lib/api.ts`
 - `frontend/src/lib/searchHistory.ts`
 - (Optional) `frontend/src/features/search/SearchPage.tsx`

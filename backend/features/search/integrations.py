@@ -39,6 +39,15 @@ def load_FAISS(documents: list[Document]) -> FAISS:
     return
 
 
+def search_knowledgegraph(cypher_query: str) -> list[SearchResult]:
+    """This is a mock function that will search the knowledge graph using a cypher query."""
+    return [
+        SearchResult(
+            document=Document(page_content=cypher_query), score=0.9, reason="test"
+        )
+    ]
+
+
 def search_documents(query: str, documents: list[Document]) -> list[SearchResult]:
     """Using the FAISS vector store, search for the query and return a list of SearchResults.
 
@@ -48,6 +57,7 @@ def search_documents(query: str, documents: list[Document]) -> list[SearchResult
     # - TODO
     # 1) load the FAISS store
     # 2) convert the query to Cypher
-    # 3) search for the original query, and for the cypher query both on the FAISS dataset. We'll assume for the test,
-    # for simplicity, that the Cypher query works on the FAISS index, even though in reality it would not work at all.
+    # 3) Search for the query on the FAISS store
+    # 4) Search for the cypher query on the knowledgebase
+    # 5) Return all the results
     return []
