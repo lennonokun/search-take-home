@@ -1,4 +1,5 @@
 import { SearchPage } from "./features/search/SearchPage";
+import { NotepadStream } from "./features/streaming/NotepadStream";
 
 function App() {
   return (
@@ -7,6 +8,7 @@ function App() {
     >
       <h1>Search Demo</h1>
       <SearchPage />
+      <NotepadStream />
     </div>
   );
 }

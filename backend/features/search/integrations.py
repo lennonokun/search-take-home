@@ -36,7 +36,7 @@ async def text_to_cypher(text: str) -> str:
 def load_FAISS(documents: list[Document]) -> FAISS:
     """Create and return a FAISS vector store from the DOCUMENTS list."""
     # TODO
-    return
+    pass
 
 
 def search_knowledgegraph(cypher_query: str) -> list[SearchResult]:
