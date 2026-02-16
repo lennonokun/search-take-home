@@ -98,10 +98,7 @@ You should only need to modify:
 
 ```bash
 cd backend
-python -m venv .venv
-source .venv/bin/activate # or .venv\Scripts\activate on windows
-pip install -r requirements.txt
-uvicorn main:app --reload
+uv run uvicorn main:app --reload
 ```
 
 ### Frontend
