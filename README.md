@@ -96,9 +96,11 @@ You should only need to modify:
 
 ### Backend
 
+Using `--env-file .env` to source environment variables from `.env`:
+
 ```bash
 cd backend
-uv run uvicorn main:app --reload
+uv run --env-file .env uvicorn main:app --reload
 ```
 
 ### Frontend
