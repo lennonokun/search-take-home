@@ -96,12 +96,24 @@ You should only need to modify:
 
 ### Backend
 
-Using `--env-file .env` to source environment variables from `.env`:
+Using uv:
 
 ```bash
 cd backend
-uv run --env-file .env uvicorn main:app --reload
+uv run uvicorn main:app --env-file .env --reload
 ```
+
+Or using venv:
+
+```bash
+cd backend
+python -m venv .venv
+source .venv/bin/activate # or .venv\Scripts\activate on windows
+pip install -r requirements.txt
+uvicorn main:app --env-file .env --reload
+```
+
+````
 
 ### Frontend
 
@@ -109,7 +121,7 @@ uv run --env-file .env uvicorn main:app --reload
 cd frontend
 npm install
 npm run dev
-```
+````
 
 Backend runs on `http://localhost:8000`
 Frontend runs on `http://localhost:5173`
