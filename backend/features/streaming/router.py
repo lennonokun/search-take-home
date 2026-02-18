@@ -4,6 +4,7 @@ import asyncio
 from pathlib import Path
 from typing import AsyncIterator
 
+import anyio
 from fastapi import APIRouter, HTTPException, Query
 from fastapi.responses import StreamingResponse
 
@@ -11,20 +12,12 @@ from fastapi.responses import StreamingResponse
 router = APIRouter(prefix="/streaming", tags=["streaming"])
 
 
-def _sse(data: str, event: str | None = None) -> str:
-    """Format a Server-Sent Event (SSE) message.
+def _sse(event: str, data: str = "") -> str:
+    output = f"event: {event}\n"
+    safe_data = data.replace("\n", "\ndata: ")
+    output += f"data: {safe_data}\n\n"
 
-    Candidates: you may keep this helper or replace it.
-    """
-
-    lines: list[str] = []
-    if event:
-        lines.append(f"event: {event}")
-
-    for line in data.splitlines() or [""]:
-        lines.append(f"data: {line}")
-
-    return "\n".join(lines) + "\n\n"
+    return output
 
 
 @router.get("/notepad")
@@ -47,22 +40,28 @@ async def stream_notepad(
     - The function currently returns a stub response (non-streaming) so candidates
       can implement the actual streaming logic.
     """
-
-    # Keep imports referenced for candidates. These are unused until implemented.
-    _ = (asyncio, AsyncIterator, chunk_size, delay_ms)
-
     file_path = Path(path)
+
     if not file_path.is_absolute():
         file_path = (Path.cwd() / file_path).resolve()
 
     if not file_path.exists():
         raise HTTPException(status_code=404, detail=f"File not found: {file_path}")
 
-    async def event_generator() -> AsyncIterator[bytes]:
-        # TODO (candidate): yield SSE events that stream `file_path` progressively.
-        yield _sse(
-            "TODO: implement SSE streaming in backend/features/streaming/router.py",
-            event="todo",
-        ).encode("utf-8")
+    async def event_generator() -> AsyncIterator[str]:
+        yield _sse("meta", path)
+        try:
+            async with await anyio.open_file(
+                file_path, mode="r", encoding="utf-8"
+            ) as f:
+                while chunk := await f.read(chunk_size):
+                    yield _sse("chunk", chunk)
+
+                    if delay_ms > 0:
+                        await asyncio.sleep(delay_ms / 1000.0)
+
+            yield _sse("done")
+        except Exception as e:
+            yield _sse("error", str(e))
 
     return StreamingResponse(event_generator(), media_type="text/event-stream")
