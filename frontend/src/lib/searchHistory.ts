@@ -31,8 +31,22 @@ export function addToHistory(
   query: string,
   options: AddToHistoryOptions = {},
 ): SearchHistory {
-  // Stub implementation so the app compiles; replace this with real logic.
-  throw new Error("addToHistory() not implemented yet");
+  const { maxEntries = 10 } = options;
+
+  if (!query.trim())
+    return history;
+
+  const last = history[history.length - 1];
+  const entry: SearchQuery = { query, timestamp: Date.now() };
+
+  let next: SearchHistory;
+  if (last?.query.trim() === query.trim()) {
+    next = [...history.slice(0, -1), entry];
+  } else {
+    next = [...history, entry];
+  }
+
+  return next.slice(-maxEntries);
 }
 
 /**
@@ -45,7 +59,6 @@ export function addToHistory(
  *   `addToHistory` implementation does not already enforce this.
  */
 export function getRecentQueries(history: SearchHistory): string[] {
-  // Stub implementation so the app compiles; replace this with real logic.
-  throw new Error("getRecentQueries() not implemented yet");
+  return [...history].reverse().map((h) => h.query);
 }
 

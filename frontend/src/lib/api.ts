@@ -38,5 +38,26 @@ export class SearchError extends Error {
  */
 export async function search(query: string, topK = 5): Promise<SearchResult[]> {
   // Stub implementation so the app compiles; replace this with a real call.
+  try {
+    const response = await fetch("/api/search", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      }, body: JSON.stringify({
+        query: query,
+        top_k: topK
+      })
+    });
+
+    if (!response.ok)
+      throw new SearchError(`HTTP Error: ${response.status}`)
+
+    return await response.json();
+  } catch (error) {
+    throw new SearchError(`Error: ${error.message}`);
+  }
+
+
+
   throw new SearchError("search() not implemented yet");
 }
